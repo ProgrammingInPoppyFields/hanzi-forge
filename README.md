@@ -2,6 +2,8 @@
 
 Take real Chinese characters apart into their IDS trees, then build characters that have never existed from valid, rule-checked parts.
 
+**Try it live: https://programminginpoppyfields.github.io/hanzi-forge/**
+
 Everything runs in the browser. There is no backend; the data is two static JSON files.
 
 ## Decompose
