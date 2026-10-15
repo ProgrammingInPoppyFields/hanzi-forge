@@ -123,6 +123,24 @@ export function buildTreeFromIds(idsString) {
   return buildFromExpr(expr, {}, 0, expr.op ? 1 : 0, new Set());
 }
 
+// Puts a root *character* node above an operator tree, the way Decompose's tree starts with the
+// character itself. Compose uses it so its (upside-down) tree ends in the new character.
+// `image` is an optional picture of that character; without one the node shows a placeholder.
+export function wrapWithRoot(operatorRoot, image = null) {
+  const shift = (n) => ({ ...n, depth: n.depth + 1, children: n.children.map(shift) });
+  return {
+    id: "root",
+    type: "character",
+    value: "",
+    glyphRoot: true,
+    image,
+    ids: null,
+    depth: 0,
+    level: 0,
+    children: [shift(operatorRoot)],
+  };
+}
+
 // Flattens the tree into a Map<id, { node, parentId }>, and separately
 // returns id -> array of ancestor ids (root-first, excluding self).
 // Used by the UI to compute "related" nodes for hover/pin highlighting.

@@ -10,8 +10,6 @@ function flipY(node, h) {
   return { ...node, y: h - node.y, children: node.children.map((c) => flipY(c, h)) };
 }
 
-const FLIP_STUB = 40; // extra room below a flipped tree for the line down into the big glyph
-
 export default function TreeView({ tree, flip = false }) {
   const [hoveredId, setHoveredId] = useState(null);
   const [pinnedId, setPinnedId] = useState(null);
@@ -19,7 +17,7 @@ export default function TreeView({ tree, flip = false }) {
   const laid = useMemo(() => layoutTree(tree), [tree]);
   const root = useMemo(() => (flip ? flipY(laid.root, laid.height) : laid.root), [laid, flip]);
   const { width } = laid;
-  const height = flip ? laid.height + FLIP_STUB : laid.height;
+  const { height } = laid;
   const activeId = pinnedId ?? hoveredId;
 
   // Node ids are regenerated on every build, so old highlights must go.
@@ -54,7 +52,6 @@ export default function TreeView({ tree, flip = false }) {
         root={root}
         width={width}
         height={height}
-        flip={flip}
         activeId={activeId}
         relatedIds={relatedIds}
         hoveredId={hoveredId}

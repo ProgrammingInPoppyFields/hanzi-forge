@@ -3,8 +3,9 @@
   --paper: #ffffff;
   --hairline: #dddddd;
   --mono: "SF Mono", "IBM Plex Mono", Menlo, Consolas, monospace;
-  --han: "Songti SC", "Noto Serif CJK SC", "PingFang SC", "Hiragino Sans GB",
-    serif;
+  --han: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  --hero: clamp(180px, 46vw, 260px);
+  --field-w: 360px;
 }
 
 * {
@@ -72,18 +73,15 @@ body {
 
 /* ---------- input ---------- */
 
-.input-row {
-  margin-bottom: 32px;
-}
-
 .character-input {
-  width: 3.4em;
+  width: min(100%, var(--field-w));
+  height: 64px;
   font-family: var(--han);
   font-size: 40px;
   text-align: center;
   border: none;
   border-bottom: 1px solid var(--ink);
-  padding: 4px 0 8px;
+  padding: 0 0 8px;
   background: transparent;
   color: var(--ink);
   outline: none;
@@ -106,11 +104,30 @@ body {
   margin-bottom: 48px;
 }
 
+.hero-glyph {
+  width: var(--hero);
+  height: var(--hero);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
 .hero-char {
   font-family: var(--han);
-  font-size: clamp(96px, 22vw, 200px);
+  font-weight: 400;
+  font-size: calc(var(--hero) * 0.88);
   line-height: 1;
-  margin-bottom: 20px;
+}
+
+.hero-char--blank {
+  color: #dddddd;
+}
+
+.composed-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .meta-block {
@@ -266,10 +283,6 @@ body {
   }
 
 
-  .hero-char {
-    font-size: clamp(72px, 28vw, 140px);
-  }
-
   .character-input {
     font-size: 32px;
   }
@@ -310,19 +323,6 @@ body {
 
 /* ---------- compose ---------- */
 
-.forge-stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 36px;
-}
-
-.forge-glyph {
-  width: clamp(180px, 46vw, 280px);
-  aspect-ratio: 1;
-  margin-bottom: 20px;
-}
-
 .composed-glyph {
   width: 100%;
   height: 100%;
@@ -342,25 +342,17 @@ body {
   stroke-dasharray: 2 2;
 }
 
-.forge-glyph__blank {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--han);
-  font-size: 96px;
-  color: #dddddd;
-  border: 1px dashed #dddddd;
-}
-
 .forge-status {
   color: #777777;
   text-align: center;
   max-width: 420px;
 }
 
-.forge-status--new {
+.meta-pinyin--new {
+  color: #2f8583;
+}
+
+.forge-status--exists {
   color: #2f8583;
 }
 
@@ -409,11 +401,10 @@ body {
 
 .forge-input {
   width: 100%;
-  max-width: 560px;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 8px;
 }
 
 .forge-input .forge-actions {
@@ -430,7 +421,9 @@ body {
 
 .ids-field {
   position: relative;
-  width: 100%;
+  width: auto;
+  min-width: min(100%, var(--field-w));
+  max-width: 100%;
   min-height: 64px;
   display: flex;
   align-items: center;
@@ -460,6 +453,7 @@ body {
   font-family: var(--han);
   font-size: 40px;
   line-height: 1.1;
+  padding: 0 8px;
 }
 
 .ids-field__char {
@@ -536,6 +530,7 @@ body {
 
 .keyboard {
   width: 100%;
+  max-width: 560px;
   margin-top: 14px;
   padding: 14px;
   border: 1px solid var(--hairline);
@@ -611,4 +606,37 @@ body {
   height: 38px;
   font-family: var(--han);
   font-size: 22px;
+}
+
+.tab__arrow {
+  font-family: var(--han);
+  letter-spacing: 0;
+  margin-left: 2px;
+}
+
+/* ---------- shared input block (both sides) ---------- */
+
+.forge-input {
+  margin-bottom: 40px;
+}
+
+.field-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.field-hint {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999999;
+}
+
+.tree-section--flipped {
+  margin-top: 0;
+  margin-bottom: 40px;
 }

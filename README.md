@@ -19,7 +19,7 @@ Go the other way. Pick operators (⿰ ⿱ ⿸ …) and parts (八, 亅, 門 …)
 ![Compose: an invented character built from 門 and 工](screenshots/compose.png)
 
 - **Invalid combinations are blocked.** Nothing is hand-written: the rules are learned from the ~9,500 real characters in the dictionary. A part can only fill a slot (left, top, inside an enclosure, …) if real characters use it that way, and a part must have wrapped or overlaid in at least 3 real characters before it can do so here. That is why 雨 can sit on top of something but can't enclose it.
-- **New characters are drawn from stroke skeletons**, re-stroked at one line weight, so squeezed parts read as one character instead of pasted-together glyphs.
+- **New characters are typeset, not stretched.** Each part is drawn from real Noto Sans SC outlines, reshaped so vertical and horizontal stems share one thickness. Enclosed parts are placed in the outer part's real empty space, and anything that would collide is shrunk until it clears, so squeezed parts read as one character.
 - **Surprise me** rolls a random valid new character.
 
 "Never existed" only means *not in this dictionary*. Unicode has far more characters than the ~9,500 here, so a real rare character can still be reported as new.
@@ -33,10 +33,16 @@ npm run dev
 
 Then open the URL it prints (usually `http://localhost:5173`). `#compose` in the URL jumps straight to the Compose tab.
 
-The generated data files are committed in `public/`, so nothing else is needed. To regenerate them (downloads about 33 MB):
+The generated data files are committed in `public/`, so nothing else is needed. To regenerate the dictionary and stroke data (downloads about 33 MB):
 
 ```bash
 npm run build:data
+```
+
+The typeface outlines (`public/outlines.json`, loaded only by the Compose tab) come from a Python script. It needs `pip install fonttools shapely numpy` and downloads Noto Sans SC Regular (about 8 MB):
+
+```bash
+python3 scripts/build-outlines.py
 ```
 
 ## How it's put together
@@ -48,7 +54,9 @@ npm run build:data
 | IDS parsing and recursive tree building | `src/lib/tree-builder.js` |
 | Tree layout (hand-rolled tidy-tree) | `src/lib/tree-layout.js` |
 | Compose rules, learned from data | `src/lib/ids-rules.js` |
-| Compose layout and stroke fitting | `src/lib/ids-compose.js`, `src/lib/stroke-glyph.js` |
+| Compose slot layout | `src/lib/ids-compose.js` |
+| Typeset invented characters (canvas) | `src/lib/glyph-fit.js` |
+| Stroke-drawn fallback (while outlines load) | `src/lib/stroke-glyph.js` |
 | Rendering | `src/components/`, `src/pages/` |
 
 Only React is used: no D3, no graph or UI libraries. Vite is the dev server and bundler.
@@ -57,4 +65,4 @@ To use a different dataset, make `scripts/build-dictionary.mjs` produce the same
 
 ## Data
 
-Decompositions, pinyin, meanings and stroke skeletons come from [Make Me a Hanzi](https://github.com/skishore/makemeahanzi). Check that project's licenses before redistributing the generated files.
+Decompositions, pinyin, meanings and stroke skeletons come from [Make Me a Hanzi](https://github.com/skishore/makemeahanzi). Check that project's licenses before redistributing the generated files. Glyph outlines are from [Noto Sans SC](https://github.com/notofonts/noto-cjk) (SIL Open Font License), and the page loads the same typeface from Google Fonts.

@@ -25,7 +25,6 @@ export default function IDSTree({
   hoveredId,
   onHover,
   onClick,
-  flip = false,
 }) {
   return (
     <svg
@@ -37,16 +36,6 @@ export default function IDSTree({
       aria-label="IDS decomposition tree"
     >
       <TreeEdges node={root} relatedIds={relatedIds} activeId={activeId} />
-      {flip && (
-        <line
-          className="ids-edge"
-          x1={root.x}
-          y1={root.y + 24}
-          x2={root.x}
-          y2={height}
-          stroke={colorForLevel(root.level)}
-        />
-      )}
       <TreeNodes
         node={root}
         relatedIds={relatedIds}
@@ -191,6 +180,12 @@ function TreeNodeGlyph({ node, dimmed, emphasized, isHovered, onHover, onClick }
       <circle r={isOperator ? 18 : 26} className="ids-node__halo" />
       {isOperator ? (
         <OperatorIcon operator={node.value} size={fontSize} x={0} y={1} color={color} />
+      ) : node.glyphRoot ? (
+        node.image ? (
+          <image href={node.image} x={-22} y={-22} width={44} height={44} />
+        ) : (
+          <text fill={color} fontSize={fontSize} textAnchor="middle" dominantBaseline="central" className="ids-node__glyph">？</text>
+        )
       ) : (
         <text
           fill={color}
