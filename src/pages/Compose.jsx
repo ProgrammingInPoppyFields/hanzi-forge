@@ -12,22 +12,23 @@ import {
 } from "../lib/ids-rules.js";
 import TreeView from "../components/TreeView.jsx";
 import ComposedGlyph from "../components/ComposedGlyph.jsx";
-import OperatorIcon from "../components/OperatorIcon.jsx";
 import IdsField from "../components/IdsField.jsx";
+import PartsKeyboard, { COMMON_PARTS } from "../components/PartsKeyboard.jsx";
 
-const COMMON_PARTS = Array.from(
-  "一丨丶丿乙亅二十八人亻儿入厂匚刀力又口囗土士夕大女子宀小尸山工己巾广弓心戈手日月木水火田目石禾米糸言貝車金門雨頁魚鳥彳氵扌艹忄犭阝"
-);
+const KEYBOARD_KEY = "hanzi-forge:keyboard-open";
 
-const OPERATOR_KEYS = Object.keys(OPERATORS);
-
-// "jǐng" -> "jing", so people can search pinyin without typing tone marks.
-const stripTones = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+function readOpen() {
+  try {
+    return localStorage.getItem(KEYBOARD_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 export default function Compose({ dictionary, strokes }) {
   const [ids, setIds] = useState("⿱八亅");
   const [blocked, setBlocked] = useState(null);
-  const [query, setQuery] = useState("");
+  const [keyboardOpen, setKeyboardOpen] = useState(readOpen);
   const [copied, setCopied] = useState(false);
 
   const reverse = useMemo(
@@ -36,31 +37,6 @@ export default function Compose({ dictionary, strokes }) {
   );
 
   const rules = useMemo(() => (dictionary ? buildRules(dictionary.ids) : null), [dictionary]);
-
-  const searchIndex = useMemo(
-    () =>
-      dictionary
-        ? Object.entries(dictionary.info).map(([char, i]) => ({
-            char,
-            pinyin: stripTones(i.pinyin),
-            meaning: i.meaning.toLowerCase(),
-          }))
-        : [],
-    [dictionary]
-  );
-
-  const results = useMemo(() => {
-    const q = stripTones(query.trim());
-    if (!q) return [];
-    const exact = [];
-    const rest = [];
-    for (const e of searchIndex) {
-      if (e.char === query.trim() || e.pinyin.split(", ").includes(q)) exact.push(e.char);
-      else if (e.pinyin.startsWith(q) || e.meaning.includes(q)) rest.push(e.char);
-      if (exact.length + rest.length >= 60) break;
-    }
-    return [...exact, ...rest].slice(0, 48);
-  }, [query, searchIndex]);
 
   const { expr, missing, extra } = useMemo(() => parseIds(ids), [ids]);
   const tree = useMemo(() => buildTreeFromIds(ids), [ids]);
@@ -105,6 +81,17 @@ export default function Compose({ dictionary, strokes }) {
   const append = (token) => tryUpdate(ids + token);
   const undo = () => tryUpdate(Array.from(ids).slice(0, -1).join(""));
 
+  function toggleKeyboard() {
+    setKeyboardOpen((open) => {
+      try {
+        localStorage.setItem(KEYBOARD_KEY, open ? "0" : "1");
+      } catch {
+        // storage can be blocked; the toggle still works for this visit
+      }
+      return !open;
+    });
+  }
+
   async function copy() {
     try {
       await navigator.clipboard.writeText(ids);
@@ -139,7 +126,19 @@ export default function Compose({ dictionary, strokes }) {
           <button type="button" onClick={() => tryUpdate("")} disabled={!ids}>Clear</button>
           <button type="button" onClick={copy} disabled={!ids}>{copied ? "Copied" : "Copy IDS"}</button>
           <button type="button" onClick={surprise} disabled={!rules}>Surprise me</button>
+          <button
+            type="button"
+            className={`forge-actions__keyboard${keyboardOpen ? " is-open" : ""}`}
+            onClick={toggleKeyboard}
+            aria-expanded={keyboardOpen}
+          >
+            Keyboard {keyboardOpen ? "–" : "+"}
+          </button>
         </div>
+
+        {keyboardOpen && (
+          <PartsKeyboard dictionary={dictionary} canAppend={canAppend} onAppend={append} />
+        )}
       </section>
 
       <section className="tree-section tree-section--flipped">
@@ -170,70 +169,6 @@ export default function Compose({ dictionary, strokes }) {
           )}
         </div>
       </section>
-
-      <details className="toolbox" open>
-        <summary className="toolbox__summary">Parts &amp; operators</summary>
-        <section className="palette">
-          <h2 className="palette__title">Operators</h2>
-          <div className="palette__row">
-            {OPERATOR_KEYS.map((op) => (
-              <button
-                key={op}
-                type="button"
-                className="op-button"
-                title={`${op}  ${OPERATORS[op].label}`}
-                aria-label={OPERATORS[op].label}
-                disabled={!canAppend(`o:${op}`)}
-                onClick={() => append(op)}
-              >
-                <OperatorIcon operator={op} size={22} />
-                <span className="op-button__label">{OPERATORS[op].label}</span>
-              </button>
-            ))}
-          </div>
-
-          <h2 className="palette__title">Parts</h2>
-          <div className="palette__row">
-            {COMMON_PARTS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                className="part-button"
-                disabled={!canAppend(`c:${c}`)}
-                onClick={() => append(c)}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-
-          <input
-            className="forge-search"
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="find any part: a character, pinyin, or English (e.g. water, ma)"
-            spellCheck={false}
-            aria-label="Search parts"
-          />
-          {results.length > 0 && (
-            <div className="palette__row">
-              {results.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className="part-button"
-                  title={`${dictionary.info[c].pinyin} · ${dictionary.info[c].meaning}`}
-                  disabled={!canAppend(`c:${c}`)}
-                  onClick={() => append(c)}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          )}
-        </section>
-      </details>
     </>
   );
 }
