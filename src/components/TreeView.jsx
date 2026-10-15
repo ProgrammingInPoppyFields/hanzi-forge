@@ -5,11 +5,21 @@ import IDSTree from "./IDSTree.jsx";
 
 // Lays out a built tree and owns hover / pin highlighting, so both pages
 // (Decompose and Compose) get identical tree behavior.
-export default function TreeView({ tree }) {
+// `flip` draws the tree upside down (leaves on top, root at the bottom) for Compose.
+function flipY(node, h) {
+  return { ...node, y: h - node.y, children: node.children.map((c) => flipY(c, h)) };
+}
+
+const FLIP_STUB = 40; // extra room below a flipped tree for the line down into the big glyph
+
+export default function TreeView({ tree, flip = false }) {
   const [hoveredId, setHoveredId] = useState(null);
   const [pinnedId, setPinnedId] = useState(null);
 
-  const { root, width, height } = useMemo(() => layoutTree(tree), [tree]);
+  const laid = useMemo(() => layoutTree(tree), [tree]);
+  const root = useMemo(() => (flip ? flipY(laid.root, laid.height) : laid.root), [laid, flip]);
+  const { width } = laid;
+  const height = flip ? laid.height + FLIP_STUB : laid.height;
   const activeId = pinnedId ?? hoveredId;
 
   // Node ids are regenerated on every build, so old highlights must go.
@@ -44,6 +54,7 @@ export default function TreeView({ tree }) {
         root={root}
         width={width}
         height={height}
+        flip={flip}
         activeId={activeId}
         relatedIds={relatedIds}
         hoveredId={hoveredId}

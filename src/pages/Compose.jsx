@@ -13,7 +13,7 @@ import {
 import TreeView from "../components/TreeView.jsx";
 import ComposedGlyph from "../components/ComposedGlyph.jsx";
 import OperatorIcon from "../components/OperatorIcon.jsx";
-import { IdsInlineHtml } from "../components/IdsInline.jsx";
+import IdsField from "../components/IdsField.jsx";
 
 const COMMON_PARTS = Array.from(
   "一丨丶丿乙亅二十八人亻儿入厂匚刀力又口囗土士夕大女子宀小尸山工己巾广弓心戈手日月木水火田目石禾米糸言貝車金門雨頁魚鳥彳氵扌艹忄犭阝"
@@ -132,6 +132,24 @@ export default function Compose({ dictionary, strokes }) {
 
   return (
     <>
+      <section className="forge-input">
+        <IdsField ids={ids} onChange={tryUpdate} onUndo={undo} />
+        <div className="forge-actions">
+          <button type="button" onClick={undo} disabled={!ids}>Undo</button>
+          <button type="button" onClick={() => tryUpdate("")} disabled={!ids}>Clear</button>
+          <button type="button" onClick={copy} disabled={!ids}>{copied ? "Copied" : "Copy IDS"}</button>
+          <button type="button" onClick={surprise} disabled={!rules}>Surprise me</button>
+        </div>
+      </section>
+
+      <section className="tree-section tree-section--flipped">
+        {tree ? (
+          <TreeView tree={tree} flip />
+        ) : (
+          <p className="no-decomposition">Start with an operator, then add its parts.</p>
+        )}
+      </section>
+
       <section className="forge-stage">
         <div className="forge-glyph">
           {expr ? <ComposedGlyph expr={expr} strokes={strokes} /> : <div className="forge-glyph__blank">?</div>}
@@ -153,79 +171,34 @@ export default function Compose({ dictionary, strokes }) {
         </div>
       </section>
 
-      <section className="forge-bar">
-        <div className="forge-strip" aria-label="Current IDS expression">
-          {ids ? <IdsInlineHtml ids={ids} iconSize={22} /> : <span className="forge-strip__hint">empty</span>}
-        </div>
-
-        <div className="forge-actions">
-          <input
-            className="forge-input"
-            type="text"
-            value={ids}
-            onChange={(e) => tryUpdate(e.target.value.replace(/\s/g, ""))}
-            placeholder="paste an IDS string"
-            spellCheck={false}
-            aria-label="IDS string"
-          />
-          <button type="button" onClick={undo} disabled={!ids}>Undo</button>
-          <button type="button" onClick={() => tryUpdate("")} disabled={!ids}>Clear</button>
-          <button type="button" onClick={copy} disabled={!ids}>{copied ? "Copied" : "Copy IDS"}</button>
-          <button type="button" onClick={surprise} disabled={!rules}>Surprise me</button>
-        </div>
-      </section>
-
-      <section className="palette">
-        <h2 className="palette__title">Operators</h2>
-        <div className="palette__row">
-          {OPERATOR_KEYS.map((op) => (
-            <button
-              key={op}
-              type="button"
-              className="op-button"
-              title={`${op}  ${OPERATORS[op].label}`}
-              aria-label={OPERATORS[op].label}
-              disabled={!canAppend(`o:${op}`)}
-              onClick={() => append(op)}
-            >
-              <OperatorIcon operator={op} size={22} />
-              <span className="op-button__label">{OPERATORS[op].label}</span>
-            </button>
-          ))}
-        </div>
-
-        <h2 className="palette__title">Parts</h2>
-        <div className="palette__row">
-          {COMMON_PARTS.map((c) => (
-            <button
-              key={c}
-              type="button"
-              className="part-button"
-              disabled={!canAppend(`c:${c}`)}
-              onClick={() => append(c)}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        <input
-          className="forge-search"
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="find any part: a character, pinyin, or English (e.g. water, ma)"
-          spellCheck={false}
-          aria-label="Search parts"
-        />
-        {results.length > 0 && (
+      <details className="toolbox" open>
+        <summary className="toolbox__summary">Parts &amp; operators</summary>
+        <section className="palette">
+          <h2 className="palette__title">Operators</h2>
           <div className="palette__row">
-            {results.map((c) => (
+            {OPERATOR_KEYS.map((op) => (
+              <button
+                key={op}
+                type="button"
+                className="op-button"
+                title={`${op}  ${OPERATORS[op].label}`}
+                aria-label={OPERATORS[op].label}
+                disabled={!canAppend(`o:${op}`)}
+                onClick={() => append(op)}
+              >
+                <OperatorIcon operator={op} size={22} />
+                <span className="op-button__label">{OPERATORS[op].label}</span>
+              </button>
+            ))}
+          </div>
+
+          <h2 className="palette__title">Parts</h2>
+          <div className="palette__row">
+            {COMMON_PARTS.map((c) => (
               <button
                 key={c}
                 type="button"
                 className="part-button"
-                title={`${dictionary.info[c].pinyin} · ${dictionary.info[c].meaning}`}
                 disabled={!canAppend(`c:${c}`)}
                 onClick={() => append(c)}
               >
@@ -233,14 +206,34 @@ export default function Compose({ dictionary, strokes }) {
               </button>
             ))}
           </div>
-        )}
-      </section>
 
-      {tree && (
-        <section className="tree-section">
-          <TreeView tree={tree} />
+          <input
+            className="forge-search"
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="find any part: a character, pinyin, or English (e.g. water, ma)"
+            spellCheck={false}
+            aria-label="Search parts"
+          />
+          {results.length > 0 && (
+            <div className="palette__row">
+              {results.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  className="part-button"
+                  title={`${dictionary.info[c].pinyin} · ${dictionary.info[c].meaning}`}
+                  disabled={!canAppend(`c:${c}`)}
+                  onClick={() => append(c)}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
         </section>
-      )}
+      </details>
     </>
   );
 }

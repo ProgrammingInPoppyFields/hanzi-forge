@@ -25,16 +25,28 @@ export default function IDSTree({
   hoveredId,
   onHover,
   onClick,
+  flip = false,
 }) {
   return (
     <svg
       className="ids-tree-svg"
       viewBox={`0 0 ${width} ${height}`}
       width="100%"
+      style={{ maxWidth: width, margin: "0 auto" }}
       role="img"
       aria-label="IDS decomposition tree"
     >
       <TreeEdges node={root} relatedIds={relatedIds} activeId={activeId} />
+      {flip && (
+        <line
+          className="ids-edge"
+          x1={root.x}
+          y1={root.y + 24}
+          x2={root.x}
+          y2={height}
+          stroke={colorForLevel(root.level)}
+        />
+      )}
       <TreeNodes
         node={root}
         relatedIds={relatedIds}
