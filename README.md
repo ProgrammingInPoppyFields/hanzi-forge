@@ -4,19 +4,38 @@ Take real Chinese characters apart into their IDS trees, then build characters t
 
 **Try it live: https://programminginpoppyfields.github.io/hanzi-forge/**
 
-Everything runs in the browser. There is no backend; the data is two static JSON files.
+Everything runs in the browser. There is no backend; the data is a few static JSON files.
+
+The two tabs are mirror images of each other. **Decompose** goes from a character down to its parts (the tree grows downward); **Compose** goes from parts up to a character (the same tree, upside down). Both share the same input, controls, big-character square and label stack, and each can hand its character to the other.
 
 ## Decompose
 
-Type a single Han character and see its recursive **IDS** (Ideographic Description Sequence) breakdown as a tree. Each level of decomposition gets its own color, and hovering a node traces its branch (click to pin it).
+Type a single Han character and see its recursive **IDS** (Ideographic Description Sequence) breakdown as a tree. Each level of decomposition gets its own color, and hovering a node traces its branch (click to pin it). **Surprise me** picks a random character, and **Open in Compose ↑** sends the character's decomposition over to the other side.
 
-![Decompose: the tree for 警](screenshots/decompose.png)
+<p align="center"><img src="screenshots/decompose.png" alt="Decompose: 警 as a big character with its reading, meaning and IDS string, above a tree splitting it into 敬 and 言 and then into smaller parts" width="520"></p>
 
 ## Compose
 
-Go the other way. Pick operators (⿰ ⿱ ⿸ …) and parts (八, 亅, 門 …), or paste an IDS string, and the character is drawn for you, with a note on whether the dictionary already has it.
+Go the other way. Type or paste an IDS string, or open the **Keyboard** to pick operators (⿰ ⿱ ⿸ …) and parts (八, 亅, 門 …). The parts sit on top and converge down through the operator into the new character, with a note on whether the dictionary already has it. Operators are drawn as little icons in the input, since most fonts can't display them.
 
-![Compose: an invented character built from 門 and 工](screenshots/compose.png)
+<p align="center"><img src="screenshots/compose.png" alt="Compose: 工, 一 and 夕 stacked with the top-to-bottom operator; the tree converges from the three parts into the new character, labelled unattested" width="520"></p>
+
+### More invented characters
+
+None of these exist in the dictionary. In order: ⿴囗丨, ⿳⿱戈月頁⿸厂子, ⿵門糸, ⿹弓女 and ⿳一工小.
+
+<table>
+  <tr>
+    <td><img src="screenshots/compose-1.png" alt="Compose: ⿴囗丨, a stroke closed inside a box"></td>
+    <td><img src="screenshots/compose-2.png" alt="Compose: ⿳⿱戈月頁⿸厂子, five parts stacked in three levels"></td>
+    <td><img src="screenshots/compose-3.png" alt="Compose: ⿵門糸, 糸 inside 門"></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/compose-4.png" alt="Compose: ⿹弓女, 女 tucked into the corner of 弓"></td>
+    <td><img src="screenshots/compose-5.png" alt="Compose: ⿳一工小, three plain forms in a column"></td>
+    <td></td>
+  </tr>
+</table>
 
 - **Invalid combinations are blocked.** Nothing is hand-written: the rules are learned from the ~9,500 real characters in the dictionary. A part can only fill a slot (left, top, inside an enclosure, …) if real characters use it that way, and a part must have wrapped or overlaid in at least 3 real characters before it can do so here. That is why 雨 can sit on top of something but can't enclose it.
 - **New characters are typeset, not stretched.** Each part is drawn from real Noto Sans SC outlines, reshaped so vertical and horizontal stems share one thickness. Enclosed parts are placed in the outer part's real empty space, and anything that would collide is shrunk until it clears, so squeezed parts read as one character.
