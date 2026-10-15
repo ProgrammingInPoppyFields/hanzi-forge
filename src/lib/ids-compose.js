@@ -27,7 +27,7 @@ function countMissing(expr) {
 // how wide or tall each part naturally is.
 const SLOTS = {
   "⿴": [[0, 0, 1, 1], [0.25, 0.25, 0.5, 0.5]],
-  "⿵": [[0, 0, 1, 1], [0.25, 0.35, 0.5, 0.6]],
+  "⿵": [[0, 0, 1, 1], [0.25, 0.42, 0.5, 0.53]],
   "⿶": [[0, 0, 1, 1], [0.25, 0.05, 0.5, 0.6]],
   "⿷": [[0, 0, 1, 1], [0.35, 0.25, 0.6, 0.5]],
   "⿸": [[0, 0, 1, 1], [0.35, 0.35, 0.6, 0.6]],
@@ -52,8 +52,11 @@ function naturalSize(expr, measure) {
     case "⿱":
     case "⿳":
       return { w: Math.max(...sizes.map((z) => z.w)), h: sum(sizes, "h") };
-    default:
-      return sizes[0] ?? FALLBACK;
+    default: {
+      // an enclosing part also has to hold its inner part, so it asks for more room
+      const outer = sizes[0] ?? FALLBACK;
+      return { w: outer.w, h: outer.h * 1.5 };
+    }
   }
 }
 
@@ -82,7 +85,7 @@ const COMPOUND_OUTER_SLOTS = {
 
 const COMPLEX_STROKES = 8;
 
-function slotsFor(expr, measure) {
+export function slotsFor(expr, measure) {
   const outer = expr.args[0];
   const complexOuter = outer && (outer.op || (measure(outer.char)?.strokes ?? 0) >= COMPLEX_STROKES);
   if (complexOuter && COMPOUND_OUTER_SLOTS[expr.op]) return COMPOUND_OUTER_SLOTS[expr.op];

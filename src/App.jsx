@@ -33,7 +33,11 @@ export default function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1 className="wordmark">HANZI FORGE</h1>
+        <h1 className="wordmark">
+          <span className="wordmark__latin">HANZI FORGE</span>
+          <span className="wordmark__rule" aria-hidden="true" />
+          <span className="wordmark__han" lang="zh-Hant">漢字煉成</span>
+        </h1>
         <nav className="tabs">
           {TABS.map((t) => (
             <a
