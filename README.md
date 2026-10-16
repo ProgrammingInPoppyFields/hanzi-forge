@@ -12,13 +12,13 @@ The two tabs are mirror images of each other. **Decompose** goes from a characte
 
 Type a single Han character and see its recursive **IDS** (Ideographic Description Sequence) breakdown as a tree. Each level of decomposition gets its own color, and hovering a node traces its branch (click to pin it). **Surprise me** picks a random character, and **Open in Compose ↑** sends the character's decomposition over to the other side.
 
-<p align="center"><img src="screenshots/decompose.png" alt="Decompose: 警 as a big character with its reading, meaning and IDS string, above a tree splitting it into 敬 and 言 and then into smaller parts" width="520"></p>
+<p align="center"><img src="screenshots/decompose.png" alt="Decompose: 警 as a big character on the left with its reading, meaning and IDS string; on the right the input and a tree splitting it into 敬 and 言 and then into smaller parts, joined to the big character by a thin leader line" width="800"></p>
 
 ## Compose
 
 Go the other way. Type or paste an IDS string, or open the **Keyboard** to pick operators (⿰ ⿱ ⿸ …) and parts (八, 亅, 門 …). The parts sit on top and converge down through the operator into the new character, with a note on whether the dictionary already has it. Operators are drawn as little icons in the input, since most fonts can't display them.
 
-<p align="center"><img src="screenshots/compose.png" alt="Compose: 工, 一 and 夕 stacked with the top-to-bottom operator; the tree converges from the three parts into the new character, labelled unattested" width="520"></p>
+<p align="center"><img src="screenshots/compose.png" alt="Compose: the new character built from 工, 一 and 夕 stacked top to bottom, enlarged on the left and labelled unattested; on the right the input and an upside-down tree converging from the three parts, joined to the big character by a leader line" width="800"></p>
 
 ### More invented characters
 
