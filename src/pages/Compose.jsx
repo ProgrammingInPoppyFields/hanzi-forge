@@ -15,6 +15,7 @@ import TreeView from "../components/TreeView.jsx";
 import ComposedGlyph from "../components/ComposedGlyph.jsx";
 import ComposedCanvas, { glyphDataUrl } from "../components/ComposedCanvas.jsx";
 import GlyphCaption from "../components/GlyphCaption.jsx";
+import LeaderLine from "../components/LeaderLine.jsx";
 import IdsField from "../components/IdsField.jsx";
 import PartsKeyboard, { COMMON_PARTS } from "../components/PartsKeyboard.jsx";
 
@@ -144,41 +145,8 @@ export default function Compose({ dictionary, strokes, outlines, ids, setIds, on
   if (blocked) notes.push({ kind: "blocked", text: blocked });
 
   return (
-    <>
-      <section className="forge-input">
-        <IdsField ids={ids} onChange={tryUpdate} onUndo={undo} />
-        <div className="forge-actions">
-          <button type="button" onClick={surprise} disabled={!rules}>Surprise me</button>
-          <button type="button" onClick={undo} disabled={!ids}>Undo</button>
-          <button type="button" onClick={() => tryUpdate("")} disabled={!ids}>Clear</button>
-          <button type="button" onClick={copy} disabled={!ids}>{copied ? "Copied" : "Copy IDS"}</button>
-          <button type="button" onClick={() => onOpenInDecompose(existing)} disabled={!existing}>
-            Open in Decompose ↓
-          </button>
-          <button
-            type="button"
-            className={`forge-actions__keyboard${keyboardOpen ? " is-open" : ""}`}
-            onClick={toggleKeyboard}
-            aria-expanded={keyboardOpen}
-          >
-            Keyboard {keyboardOpen ? "–" : "+"}
-          </button>
-        </div>
-
-        {keyboardOpen && (
-          <PartsKeyboard dictionary={dictionary} canAppend={canAppend} onAppend={append} />
-        )}
-      </section>
-
-      <section className="tree-section tree-section--flipped">
-        {tree ? (
-          <TreeView tree={tree} flip />
-        ) : (
-          <p className="no-decomposition">Start with an operator, then add its parts.</p>
-        )}
-      </section>
-
-      <section className="hero">
+    <div className="split split--compose">
+      <aside className="split__hero hero">
         <div className="hero-glyph">
           {composed ? (
             <ComposedCanvas outlines={outlines} composed={composed} />
@@ -189,7 +157,44 @@ export default function Compose({ dictionary, strokes, outlines, ids, setIds, on
           )}
         </div>
         <GlyphCaption {...caption} ids={ids} notes={notes} />
-      </section>
-    </>
+      </aside>
+
+      <div className="split__main">
+        <section className="forge-input">
+          <IdsField ids={ids} onChange={tryUpdate} onUndo={undo} />
+          <div className="forge-actions">
+            <button type="button" onClick={surprise} disabled={!rules}>Surprise me</button>
+            <button type="button" onClick={undo} disabled={!ids}>Undo</button>
+            <button type="button" onClick={() => tryUpdate("")} disabled={!ids}>Clear</button>
+            <button type="button" onClick={copy} disabled={!ids}>{copied ? "Copied" : "Copy IDS"}</button>
+            <button type="button" onClick={() => onOpenInDecompose(existing)} disabled={!existing}>
+              Open in Decompose ↓
+            </button>
+            <button
+              type="button"
+              className={`forge-actions__keyboard${keyboardOpen ? " is-open" : ""}`}
+              onClick={toggleKeyboard}
+              aria-expanded={keyboardOpen}
+            >
+              Keyboard {keyboardOpen ? "–" : "+"}
+            </button>
+          </div>
+
+          {keyboardOpen && (
+            <PartsKeyboard dictionary={dictionary} canAppend={canAppend} onAppend={append} />
+          )}
+        </section>
+
+        <section className="tree-section tree-section--flipped">
+          {tree ? (
+            <TreeView tree={tree} flip />
+          ) : (
+            <p className="no-decomposition">Start with an operator, then add its parts.</p>
+          )}
+        </section>
+      </div>
+
+      <LeaderLine watch={tree} />
+    </div>
   );
 }

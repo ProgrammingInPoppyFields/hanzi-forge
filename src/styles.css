@@ -644,3 +644,104 @@ body {
   margin-top: 0;
   margin-bottom: 40px;
 }
+
+/* ---------- split layout: spotlight character left, input + tree right ---------- */
+
+.split {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.split__main {
+  display: contents;
+}
+
+.split__hero {
+  margin-bottom: 40px;
+}
+
+.leader {
+  display: none;
+}
+
+/* stacked (narrow) order, same as before: Decompose is input / character / tree,
+   Compose is input / tree / character */
+.split--decompose .forge-input { order: 1; }
+.split--decompose .split__hero { order: 2; }
+.split--decompose .tree-section { order: 3; }
+.split--compose .forge-input { order: 1; }
+.split--compose .tree-section { order: 2; }
+.split--compose .split__hero { order: 3; }
+
+@media (min-width: 900px) {
+  :root {
+    --hero: clamp(300px, 27vw, 400px);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) 2fr;
+    column-gap: 56px;
+    align-items: start;
+  }
+
+  .split .split__hero {
+    grid-column: 1;
+    grid-row: 1;
+    position: sticky;
+    top: 40px;
+    margin-bottom: 0;
+    order: 0;
+  }
+
+  .split .split__main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .split .split__main .forge-input,
+  .split .split__main .tree-section {
+    order: 0;
+  }
+
+  .split__main .tree-section {
+    max-width: none;
+  }
+
+  .leader {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .leader path {
+    fill: none;
+    stroke: #c4c4c4;
+    stroke-width: 1;
+  }
+
+  .leader circle {
+    fill: #c4c4c4;
+  }
+
+  .split__hero .meta-block {
+    max-width: calc(var(--hero) + 80px);
+  }
+
+  .split__hero .meta-line {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+}

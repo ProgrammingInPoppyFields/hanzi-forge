@@ -169,6 +169,7 @@ function TreeNodeGlyph({ node, dimmed, emphasized, isHovered, onHover, onClick }
   return (
     <g
       className={classNames}
+      data-root-node={node.depth === 0 ? "true" : undefined}
       transform={`translate(${node.x}, ${node.y})`}
       onMouseEnter={() => onHover(node.id)}
       onMouseLeave={() => onHover(null)}

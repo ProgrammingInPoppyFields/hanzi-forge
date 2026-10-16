@@ -4,6 +4,7 @@ import { buildTree } from "../lib/tree-builder.js";
 import TreeView from "../components/TreeView.jsx";
 import CharacterInput from "../components/CharacterInput.jsx";
 import GlyphCaption from "../components/GlyphCaption.jsx";
+import LeaderLine from "../components/LeaderLine.jsx";
 
 export default function Decompose({ dictionary, loadError, char, setChar, onOpenInCompose }) {
   const [copied, setCopied] = useState(false);
@@ -34,23 +35,8 @@ export default function Decompose({ dictionary, loadError, char, setChar, onOpen
   }
 
   return (
-    <>
-      <section className="forge-input">
-        <div className="field-wrap">
-          <CharacterInput value={char} onChange={setChar} />
-          <span className="field-hint">one Han character · type or paste</span>
-        </div>
-        <div className="forge-actions">
-          <button type="button" onClick={surprise} disabled={!ids}>Surprise me</button>
-          <button type="button" onClick={() => setChar("")} disabled={!char}>Clear</button>
-          <button type="button" onClick={copy}>{copied ? "Copied" : "Copy character"}</button>
-          <button type="button" onClick={() => onOpenInCompose(decomposition)} disabled={!canCompose}>
-            Open in Compose ↑
-          </button>
-        </div>
-      </section>
-
-      <section className="hero">
+    <div className="split split--decompose">
+      <aside className="split__hero hero">
         <div className="hero-glyph">
           <span className="hero-char">{character}</span>
         </div>
@@ -59,21 +45,40 @@ export default function Decompose({ dictionary, loadError, char, setChar, onOpen
           secondary={info ? info.meaning : "no reading in the dictionary"}
           ids={decomposition}
         />
-      </section>
+      </aside>
 
-      <section className="tree-section">
-        {decomposition ? (
-          <TreeView tree={tree} />
-        ) : (
-          <p className="no-decomposition">
-            {loadError
-              ? "Could not load the dictionary. Run npm run build:data."
-              : !dictionary
-                ? "Loading dictionary…"
-                : "No decomposition available in this prototype."}
-          </p>
-        )}
-      </section>
-    </>
+      <div className="split__main">
+        <section className="forge-input">
+          <div className="field-wrap">
+            <CharacterInput value={char} onChange={setChar} />
+            <span className="field-hint">one Han character · type or paste</span>
+          </div>
+          <div className="forge-actions">
+            <button type="button" onClick={surprise} disabled={!ids}>Surprise me</button>
+            <button type="button" onClick={() => setChar("")} disabled={!char}>Clear</button>
+            <button type="button" onClick={copy}>{copied ? "Copied" : "Copy character"}</button>
+            <button type="button" onClick={() => onOpenInCompose(decomposition)} disabled={!canCompose}>
+              Open in Compose ↑
+            </button>
+          </div>
+        </section>
+
+        <section className="tree-section">
+          {decomposition ? (
+            <TreeView tree={tree} />
+          ) : (
+            <p className="no-decomposition">
+              {loadError
+                ? "Could not load the dictionary. Run npm run build:data."
+                : !dictionary
+                  ? "Loading dictionary…"
+                  : "No decomposition available in this prototype."}
+            </p>
+          )}
+        </section>
+      </div>
+
+      <LeaderLine watch={decomposition ? tree : null} />
+    </div>
   );
 }
