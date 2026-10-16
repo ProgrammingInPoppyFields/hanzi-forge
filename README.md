@@ -26,14 +26,11 @@ None of these exist in the dictionary. In order: ⿴囗丨, ⿳⿱戈月頁⿸�
 
 <table>
   <tr>
-    <td><img src="screenshots/compose-1.png" alt="Compose: ⿴囗丨, a stroke closed inside a box"></td>
-    <td><img src="screenshots/compose-2.png" alt="Compose: ⿳⿱戈月頁⿸厂子, five parts stacked in three levels"></td>
-    <td><img src="screenshots/compose-3.png" alt="Compose: ⿵門糸, 糸 inside 門"></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/compose-4.png" alt="Compose: ⿹弓女, 女 tucked into the corner of 弓"></td>
-    <td><img src="screenshots/compose-5.png" alt="Compose: ⿳一工小, three plain forms in a column"></td>
-    <td></td>
+    <td width="20%"><img src="screenshots/compose-1.png" alt="Compose: ⿴囗丨, a stroke closed inside a box" width="100%"></td>
+    <td width="20%"><img src="screenshots/compose-2.png" alt="Compose: ⿳⿱戈月頁⿸厂子, five parts stacked in three levels" width="100%"></td>
+    <td width="20%"><img src="screenshots/compose-3.png" alt="Compose: ⿵門糸, 糸 inside 門" width="100%"></td>
+    <td width="20%"><img src="screenshots/compose-4.png" alt="Compose: ⿹弓女, 女 tucked into the corner of 弓" width="100%"></td>
+    <td width="20%"><img src="screenshots/compose-5.png" alt="Compose: ⿳一工小, three plain forms in a column" width="100%"></td>
   </tr>
 </table>
 

@@ -44,13 +44,13 @@ body {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   color: var(--ink);
 }
 
 .wordmark__latin {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -58,13 +58,13 @@ body {
 
 .wordmark__rule {
   width: 1px;
-  height: 14px;
+  height: 18px;
   background: #bbbbbb;
 }
 
 .wordmark__han {
   font-family: var(--han);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
   letter-spacing: 0.4em;
   margin-right: -0.4em;
@@ -268,16 +268,16 @@ body {
   }
 
   .wordmark {
-    gap: 12px;
+    gap: 14px;
   }
 
   .wordmark__latin {
-    font-size: 11px;
+    font-size: 14px;
     letter-spacing: 0.24em;
   }
 
   .wordmark__han {
-    font-size: 12px;
+    font-size: 15px;
     letter-spacing: 0.3em;
     margin-right: -0.3em;
   }
@@ -319,6 +319,10 @@ body {
 .tab--active {
   color: var(--ink);
   border-bottom-color: var(--ink);
+}
+
+.tab--external:hover {
+  color: var(--ink);
 }
 
 /* ---------- compose ---------- */

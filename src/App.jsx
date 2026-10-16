@@ -15,6 +15,8 @@ function currentTab() {
   return window.location.hash === "#compose" ? "compose" : "decompose";
 }
 
+const GITHUB_URL = "https://github.com/ProgrammingInPoppyFields/hanzi-forge";
+
 const goTo = (tab) => {
   window.location.hash = `#${tab}`;
 };
@@ -64,6 +66,14 @@ export default function App() {
               {t.label} <span className="tab__arrow" aria-hidden="true">{t.arrow}</span>
             </a>
           ))}
+          <a
+            href={GITHUB_URL}
+            className="tab tab--external"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub <span className="tab__arrow" aria-hidden="true">↗</span>
+          </a>
         </nav>
       </header>
 
